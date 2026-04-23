@@ -1,0 +1,27 @@
+ssh your_username@login.palmetto.clemson.edu
+
+# replace your_username with your own account
+mkdir -p /scratch/your_username/Research/AI_for_game/models
+
+salloc   --partition=interact   --nodes=1   --ntasks=1   --cpus-per-task=4   --mem=32G   --time=05:00:00   --gpus=v100:1
+
+singularity exec --nv -B /scratch:/scratch \
+--env OLLAMA_MODELS=/scratch/your_username/Research/AI_for_game/models \
+--env CUDA_VISIBLE_DEVICES=0 \
+docker://ollama/ollama \
+/bin/bash -c "ollama serve & sleep 10 && ollama pull llama3.1:8b && echo 'Download Complete\!' && kill %1"
+
+
+
+# 1. login
+ssh your_username@login.palmetto.clemson.edu
+salloc   --partition=interact   --nodes=1   --ntasks=1   --cpus-per-task=4   --mem=32G   --time=05:00:00   --gpus=v100:1
+
+# 2. ssh -L 11434:node0382.palmetto.clemson.edu:11434 limingl@login.palmetto.clemson.edu
+
+# 3. run Ollama (dont need to pull again)
+singularity exec --nv -B /scratch:/scratch \
+--env OLLAMA_MODELS=/scratch/your_username/Research/AI_for_game/models \
+--env CUDA_VISIBLE_DEVICES=0,1 \
+--env OLLAMA_KEEP_ALIVE=3000s \
+docker://ollama/ollama ollama serve

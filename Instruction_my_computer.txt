@@ -1,0 +1,29 @@
+(First terminal):
+
+ssh limingl@login.palmetto.clemson.edu
+
+salloc --partition=interact        --nodes=1 --ntasks=1 --cpus-per-task=1 --mem=32G --time=06:00:00        --gpus=a100:2 --constraint=gpu_a100_80gb
+（Or）
+salloc   --partition=interact   --nodes=1   --ntasks=1   --cpus-per-task=4   --mem=32G   --time=05:00:00   --gpus=v100:1
+
+singularity exec --nv -B /scratch:/scratch --env OLLAMA_MODELS=/scratch/limingl/Research/AI_for_game/models --env CUDA_VISIBLE_DEVICES=0,1 --env OLLAMA_NUM_PARALLEL=2 --env OLLAMA_FLASH_ATTENTION=true --env OLLAMA_KEEP_ALIVE=3000s --env OLLAMA_MAX_QUEUE=512 docker://ollama/ollama ollama serve
+
+
+
+(Second terminal):
+
+ssh -L 11434:node0382.palmetto.clemson.edu:11434 limingl@login.palmetto.clemson.edu
+
+
+(Third terminal):
+
+iwr http://127.0.0.1:11434/api/tags | Select-Object -ExpandProperty Content
+
+
+KEEP ALL THREE TERMINAL OPEN
+
+
+Start 911 Operator ； 
+
+open http://127.0.0.1:8080/
+
